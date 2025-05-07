@@ -1,5 +1,4 @@
 'use client';
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useState } from "react";
 import { db } from "@/app/firebase";
@@ -31,18 +30,14 @@ export default function AddModal() {
    const[itemName, setItemName] = useState('');
     const[description, setDescription] = useState('');
     const[quantity, setQuantity] = useState(0);
-
     const storeItem = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        try {
+       
             await addData(itemName, description, quantity);
             setItemName('');
             setDescription('');
             setQuantity(0);
             alert('Item added successfully!');
-        } catch (error) {
-            alert('Error adding item!');
-        }
 
     };
 

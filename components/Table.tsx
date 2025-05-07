@@ -1,30 +1,32 @@
 'use client';
 import { Button } from "@/components/ui/button"
-import AddModal from "./crud/AddModal";
+import AddModal from "./modal/AddModal";
 import { db } from "@/app/firebase";
 import { collection, getDocs } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect,useState } from "react";
 
 async function fetchData() {
-    const querySnapshot = await getDocs(collection(db, "items"));
-
-    const data: { id: string; [key: string]: any }[] = [];
-    querySnapshot.forEach((doc) => {
-        data.push({ id: doc.id, ...doc.data() });
-    });
-    return data;
+    const data = await getDocs(collection(db, "items"));
+    const items = data.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    return items;
 }
 
 
 export default function Table() {
-    const[itemData, setData] = useState<{ id: string; [key: string]: any }[]>([]);
+    interface Item {
+        id: string;
+        itemName: string;
+        description: string;
+        quantity: number;
+    }
     
+    const [itemData, setItemData] = useState<Item[]>([]);
     useEffect(() => {
-        const fetchDataFromFirebase = async () => {
-            const data = await fetchData();
-            setData(data);
+        const fetchItems = async () => {
+            const result = await fetchData();
+            setItemData(result);
         }
-        fetchDataFromFirebase();
+        fetchItems();
     }
     , []);
 
